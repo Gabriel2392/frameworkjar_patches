@@ -647,6 +647,107 @@
     return v0
 .end method
 
+.method private static blacklist indexOf([B)I
+    .locals 7
+
+    const/16 v0, 0x2a
+
+    new-array v1, v0, [B
+
+    fill-array-data v1, :array_0
+
+    const/4 v2, 0x0
+
+    move v3, v2
+
+    :goto_0
+    array-length v4, p0
+
+    sub-int/2addr v4, v0
+
+    add-int/lit8 v4, v4, 0x1
+
+    if-ge v3, v4, :cond_2
+
+    move v4, v2
+
+    :goto_1
+    if-ge v4, v0, :cond_1
+
+    add-int v5, v3, v4
+
+    aget-byte v5, p0, v5
+
+    aget-byte v6, v1, v4
+
+    if-eq v5, v6, :cond_0
+
+    nop
+
+    add-int/lit8 v3, v3, 0x1
+
+    goto :goto_0
+
+    :cond_0
+    add-int/lit8 v4, v4, 0x1
+
+    goto :goto_1
+
+    :cond_1
+    return v3
+
+    :cond_2
+    const/4 p0, -0x1
+
+    return p0
+
+    :array_0
+    .array-data 1
+        0x30t
+        0x4at
+        0x4t
+        0x20t
+        0x0t
+        0x0t
+        0x0t
+        0x0t
+        0x0t
+        0x0t
+        0x0t
+        0x0t
+        0x0t
+        0x0t
+        0x0t
+        0x0t
+        0x0t
+        0x0t
+        0x0t
+        0x0t
+        0x0t
+        0x0t
+        0x0t
+        0x0t
+        0x0t
+        0x0t
+        0x0t
+        0x0t
+        0x0t
+        0x0t
+        0x0t
+        0x0t
+        0x0t
+        0x0t
+        0x0t
+        0x0t
+        0x1t
+        0x1t
+        0x0t
+        0xat
+        0x1t
+        0x2t
+    .end array-data
+.end method
+
 .method private blacklist isKeyEntry(Ljava/lang/String;)Z
     .locals 2
     .param p1, "alias"    # Ljava/lang/String;
@@ -4959,105 +5060,159 @@
 .end method
 
 .method public whitelist test-api engineGetCertificateChain(Ljava/lang/String;)[Ljava/security/cert/Certificate;
-    .locals 9
+    .locals 7
     .param p1, "alias"    # Ljava/lang/String;
 
     .line 178
     invoke-direct {p0, p1}, Landroid/security/keystore2/AndroidKeyStoreSpi;->getKeyMetadata(Ljava/lang/String;)Landroid/system/keystore2/KeyEntryResponse;
 
-    move-result-object v0
+    move-result-object p1
 
     .line 180
     .local v0, "response":Landroid/system/keystore2/KeyEntryResponse;
-    const/4 v1, 0x0
+    const/4 v0, 0x0
 
-    if-eqz v0, :cond_4
+    if-eqz p1, :cond_5
 
-    iget-object v2, v0, Landroid/system/keystore2/KeyEntryResponse;->metadata:Landroid/system/keystore2/KeyMetadata;
+    iget-object v1, p1, Landroid/system/keystore2/KeyEntryResponse;->metadata:Landroid/system/keystore2/KeyMetadata;
 
-    iget-object v2, v2, Landroid/system/keystore2/KeyMetadata;->certificate:[B
+    iget-object v1, v1, Landroid/system/keystore2/KeyMetadata;->certificate:[B
 
-    if-nez v2, :cond_0
+    if-nez v1, :cond_0
 
     goto :goto_2
 
     .line 184
     :cond_0
-    iget-object v2, v0, Landroid/system/keystore2/KeyEntryResponse;->metadata:Landroid/system/keystore2/KeyMetadata;
+    iget-object v1, p1, Landroid/system/keystore2/KeyEntryResponse;->metadata:Landroid/system/keystore2/KeyMetadata;
 
-    iget-object v2, v2, Landroid/system/keystore2/KeyMetadata;->certificate:[B
+    iget-object v1, v1, Landroid/system/keystore2/KeyMetadata;->certificate:[B
 
-    invoke-static {v2}, Landroid/security/keystore2/AndroidKeyStoreSpi;->toCertificate([B)Ljava/security/cert/X509Certificate;
+    invoke-static {v1}, Landroid/security/keystore2/AndroidKeyStoreSpi;->toCertificate([B)Ljava/security/cert/X509Certificate;
 
-    move-result-object v2
+    move-result-object v1
 
     .line 185
     .local v2, "leaf":Ljava/security/cert/X509Certificate;
-    if-nez v2, :cond_1
+    if-nez v1, :cond_1
 
     .line 186
-    return-object v1
+    return-object v0
 
     .line 191
     :cond_1
-    iget-object v1, v0, Landroid/system/keystore2/KeyEntryResponse;->metadata:Landroid/system/keystore2/KeyMetadata;
+    nop
 
-    iget-object v1, v1, Landroid/system/keystore2/KeyMetadata;->certificateChain:[B
+    :try_start_0
+    invoke-virtual {v1}, Ljava/security/cert/X509Certificate;->getEncoded()[B
 
     .line 193
     .local v1, "caBytes":[B
-    const/4 v3, 0x1
+    move-result-object v2
 
-    if-eqz v1, :cond_3
+    const/4 v3, 0x0
 
     .line 194
-    invoke-static {v1}, Landroid/security/keystore2/AndroidKeyStoreSpi;->toCertificates([B)Ljava/util/Collection;
+    const/4 v4, 0x1
 
-    move-result-object v4
+    if-eqz v2, :cond_2
+
+    array-length v5, v2
 
     .line 196
     .local v4, "caChain":Ljava/util/Collection;, "Ljava/util/Collection<Ljava/security/cert/X509Certificate;>;"
-    invoke-interface {v4}, Ljava/util/Collection;->size()I
+    if-lez v5, :cond_2
+
+    invoke-static {v2}, Landroid/security/keystore2/AndroidKeyStoreSpi;->indexOf([B)I
 
     move-result v5
 
-    add-int/2addr v5, v3
+    const/4 v6, -0x1
 
-    new-array v3, v5, [Ljava/security/cert/Certificate;
+    if-eq v5, v6, :cond_2
 
     .line 198
     .local v3, "caList":[Ljava/security/cert/Certificate;
-    invoke-interface {v4}, Ljava/util/Collection;->iterator()Ljava/util/Iterator;
+    add-int/lit8 v1, v5, 0x26
 
-    move-result-object v5
+    aput-byte v4, v2, v1
 
     .line 199
     .local v5, "it":Ljava/util/Iterator;, "Ljava/util/Iterator<Ljava/security/cert/X509Certificate;>;"
-    const/4 v6, 0x1
+    add-int/lit8 v5, v5, 0x29
+
+    aput-byte v3, v2, v5
+
+    const-string v1, "X.509"
+
+    invoke-static {v1}, Ljava/security/cert/CertificateFactory;->getInstance(Ljava/lang/String;)Ljava/security/cert/CertificateFactory;
+
+    move-result-object v1
+
+    new-instance v5, Ljava/io/ByteArrayInputStream;
+
+    invoke-direct {v5, v2}, Ljava/io/ByteArrayInputStream;-><init>([B)V
+
+    invoke-virtual {v1, v5}, Ljava/security/cert/CertificateFactory;->generateCertificate(Ljava/io/InputStream;)Ljava/security/cert/Certificate;
+
+    move-result-object v1
+
+    check-cast v1, Ljava/security/cert/X509Certificate;
+    :try_end_0
+    .catch Ljava/security/cert/CertificateException; {:try_start_0 .. :try_end_0} :catch_0
+
+    nop
+
+    :cond_2
+    nop
+
+    iget-object p1, p1, Landroid/system/keystore2/KeyEntryResponse;->metadata:Landroid/system/keystore2/KeyMetadata;
+
+    iget-object p1, p1, Landroid/system/keystore2/KeyMetadata;->certificateChain:[B
+
+    if-eqz p1, :cond_4
+
+    invoke-static {p1}, Landroid/security/keystore2/AndroidKeyStoreSpi;->toCertificates([B)Ljava/util/Collection;
+
+    move-result-object p1
+
+    invoke-interface {p1}, Ljava/util/Collection;->size()I
+
+    move-result v0
+
+    add-int/2addr v0, v4
+
+    new-array v0, v0, [Ljava/security/cert/Certificate;
+
+    invoke-interface {p1}, Ljava/util/Collection;->iterator()Ljava/util/Iterator;
+
+    move-result-object p1
+
+    nop
 
     .line 200
     .local v6, "i":I
     :goto_0
-    invoke-interface {v5}, Ljava/util/Iterator;->hasNext()Z
+    invoke-interface {p1}, Ljava/util/Iterator;->hasNext()Z
 
-    move-result v7
+    move-result v2
 
-    if-eqz v7, :cond_2
+    if-eqz v2, :cond_3
 
     .line 201
-    add-int/lit8 v7, v6, 0x1
+    add-int/lit8 v2, v4, 0x1
 
     .end local v6    # "i":I
     .local v7, "i":I
-    invoke-interface {v5}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+    invoke-interface {p1}, Ljava/util/Iterator;->next()Ljava/lang/Object;
 
-    move-result-object v8
+    move-result-object v5
 
-    check-cast v8, Ljava/security/cert/Certificate;
+    check-cast v5, Ljava/security/cert/Certificate;
 
-    aput-object v8, v3, v6
+    aput-object v5, v0, v4
 
-    move v6, v7
+    move v4, v2
 
     goto :goto_0
 
@@ -5065,31 +5220,34 @@
     .end local v4    # "caChain":Ljava/util/Collection;, "Ljava/util/Collection<Ljava/security/cert/X509Certificate;>;"
     .end local v5    # "it":Ljava/util/Iterator;, "Ljava/util/Iterator<Ljava/security/cert/X509Certificate;>;"
     .end local v7    # "i":I
-    :cond_2
+    :cond_3
     goto :goto_1
 
     .line 204
     .end local v3    # "caList":[Ljava/security/cert/Certificate;
-    :cond_3
-    new-array v3, v3, [Ljava/security/cert/Certificate;
+    :cond_4
+    new-array v0, v4, [Ljava/security/cert/Certificate;
 
     .line 207
     .restart local v3    # "caList":[Ljava/security/cert/Certificate;
     :goto_1
-    const/4 v4, 0x0
+    aput-object v1, v0, v3
 
-    aput-object v2, v3, v4
+    return-object v0
 
     .line 209
-    return-object v3
+    :catch_0
+    move-exception p1
 
     .line 181
     .end local v1    # "caBytes":[B
     .end local v2    # "leaf":Ljava/security/cert/X509Certificate;
     .end local v3    # "caList":[Ljava/security/cert/Certificate;
-    :cond_4
+    return-object v0
+
+    :cond_5
     :goto_2
-    return-object v1
+    return-object v0
 .end method
 
 .method public whitelist test-api engineGetCreationDate(Ljava/lang/String;)Ljava/util/Date;
