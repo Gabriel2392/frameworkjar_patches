@@ -430,10 +430,18 @@
     .end annotation
 
     .line 149
+
+    invoke-static {p0}, Lio/mesalabs/unica/SamsungPropsHooks;->onSPGetHook(Ljava/lang/String;)Ljava/lang/String;
+
+    move-result-object v0
+
+    if-nez v0, :cond_0
+
     invoke-static {p0}, Landroid/os/SystemProperties;->native_get(Ljava/lang/String;)Ljava/lang/String;
 
     move-result-object v0
 
+    :cond_0
     return-object v0
 .end method
 
@@ -445,10 +453,18 @@
     .end annotation
 
     .line 165
+
+    invoke-static {p0}, Lio/mesalabs/unica/SamsungPropsHooks;->onSPGetHook(Ljava/lang/String;)Ljava/lang/String;
+
+    move-result-object v0
+
+    if-nez v0, :cond_0
+
     invoke-static {p0, p1}, Landroid/os/SystemProperties;->native_get(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
 
     move-result-object v0
 
+    :cond_0
     return-object v0
 .end method
 
