@@ -5156,7 +5156,7 @@
     if-eqz v0, :cond_58
 
     .line 4264
-    const-string/jumbo v0, "ro.product.model"
+    const-string/jumbo v0, "ro.product.vendor.model"
 
     invoke-static {v0}, Landroid/os/SystemProperties;->get(Ljava/lang/String;)Ljava/lang/String;
 
@@ -5181,7 +5181,7 @@
     sput-boolean v0, Lcom/samsung/android/rune/CoreRune;->FAST_MADVISE_ENABLED:Z
 
     .line 4278
-    const-string/jumbo v0, "ro.product.device"
+    const-string/jumbo v0, "ro.product.vendor.device"
 
     invoke-static {v0}, Landroid/os/SystemProperties;->get(Ljava/lang/String;)Ljava/lang/String;
 
